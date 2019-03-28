@@ -9,19 +9,13 @@ def randomized_select(a, n, k):
         for j in range(p, r):  # r-1
             if A[j] <= x:
                 i = i + 1
-                tmp = A[i]
-                A[i] = A[j]
-                A[j] = tmp
-        tmp = A[i + 1]
-        A[i + 1] = A[r]
-        A[r] = tmp
+                a[i], a[j] =  a[j], a[i]
+        a[i + 1], a[r] = a[r], a[i + 1]
         return i + 1
 
     def RandomPartition(A, p, r):
         i = random.randrange(p, r)
-        tmp = A[r]
-        A[r] = A[i]
-        A[i] = tmp
+        a[i], a[r] = a[r], a[i]
         return Partition(A, p, r)
 
     def RandomSelect(A, p, r, i):
