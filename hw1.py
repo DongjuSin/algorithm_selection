@@ -1,4 +1,4 @@
-import random, math
+import random, math, time
 
 #find the "k"th smallest element in array "a" with "n" elements by using Randomized-select in CLRS
 def randomized_select(a, n, k):
@@ -14,7 +14,8 @@ def randomized_select(a, n, k):
         return i + 1
 
     def RandomPartition(A, p, r):
-        i = random.randrange(p, r)
+        # i = random.randrange(p, r)
+        i = random.randint(p, r)
         a[i], a[r] = a[r], a[i]
         return Partition(A, p, r)
 
@@ -94,3 +95,41 @@ def checker(a, n, k, ans):
     if lst[k-1] == ans:
         return True
     return False
+
+
+if __name__ == "__main__":
+
+    time_complexity_dataset = {};
+
+    for i in range(5):
+        with open("{0}.txt".format(i)) as file:
+            lines = [line for line in file]
+            head = lines.pop(0).split()
+            time_complexity_dataset[i] = { "n" : int(head[0]), "k" : int(head[1]), "data" : list(map(lambda x : int(x), lines)) }
+
+    for key in time_complexity_dataset:
+        dataset             = time_complexity_dataset[key]
+        run_time_random     = 0
+        run_time_linear     = 0
+        test_count          = 5
+
+        for i in range(test_count):
+            start_time = time.time()
+            a = randomized_select(dataset["data"], dataset["n"], dataset["k"])
+            run_time_random = run_time_random + (time.time() - start_time)
+
+            start_time = time.time()
+            b = deterministic_select(dataset["data"], dataset["n"], dataset["k"])
+            run_time_linear = run_time_linear + (time.time() - start_time)
+
+            print(i, dataset["n"], a, b)
+
+        time_complexity_dataset[key]["time_complexity_random"] = (run_time_random/test_count)
+        time_complexity_dataset[key]["time_complexity_linear"] = (run_time_linear/test_count)
+
+    print("number of iteration:", test_count)
+    for key in time_complexity_dataset:
+        item = time_complexity_dataset[key]
+        print(item["n"], item["k"], item["time_complexity_random"], item["time_complexity_linear"])
+
+
