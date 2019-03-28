@@ -136,8 +136,7 @@ if __name__ == "__main__":
             run_time_random = run_time_random + (time.time() - start_time)
 
             start_time = time.time()
-            # b = deterministic_select(dataset["data"], dataset["n"], dataset["k"])
-            b = 0
+            b = deterministic_select(dataset["data"], dataset["n"], dataset["k"])
             run_time_linear = run_time_linear + (time.time() - start_time)
 
             print(i, dataset["n"], a, b)
