@@ -1,4 +1,4 @@
-import random, math, statistics
+import random, math
 
 #find the "k"th smallest element in array "a" with "n" elements by using Randomized-select in CLRS
 def randomized_select(a, n, k):
@@ -30,14 +30,12 @@ def randomized_select(a, n, k):
         else:
             return RandomSelect(A, q + 1, r, i - k)
 
-    results = RandomSelect(a, 0, (n-1), k)
-    return results
+    return RandomSelect(a.copy(), 0, (n-1), k)
 
 #find the "k"th smallest element in array "a" with "n" elements by using the worst-case linear-time algorithm in CLRS
 def deterministic_select(a, n, k):
 
-    def divide(A, s):
-        return [ A[i*s : (i+1)*s]   for i in range(math.ceil(len(A)/s)) ]
+    divide = lambda A, s: [ A[i*s : (i+1)*s]   for i in range(math.ceil(len(A)/s)) ]
 
     def InsertionSort(A):
         for j in range(1, len(A)):
@@ -51,10 +49,9 @@ def deterministic_select(a, n, k):
 
     def findMedian(lst):
         sorted_list = InsertionSort(lst)
-        if len(lst)%2 == 0:
-            middle = math.floor(len(sorted_list)/2) - 1
-        else:
-            middle = math.floor(len(sorted_list)/2)
+        middle = math.floor(len(sorted_list) / 2)
+        if len(lst) % 2 == 0:
+            middle = middle - 1
         return sorted_list[middle]
 
     def Partition(A, p, r, x):
@@ -64,13 +61,13 @@ def deterministic_select(a, n, k):
             i = i + 1
         A[i], A[r-1] = A[r-1], A[i]
 
-        i = p
+        i = p - 1
         for j in range(p, r):
             if A[j] <= x:
                 i = i + 1
                 A[i], A[j] = A[j], A[i]
         A[i + 1], A[r-1] = A[r-1], A[i + 1]
-        return i # i + 1
+        return i + 1
 
     def Select(lst, p, r, i, group_size = 5):
 
@@ -79,8 +76,7 @@ def deterministic_select(a, n, k):
 
         median_of_median = median_list[0] if len(median_list) == 1 else Select(median_list, 0, len(median_list), math.ceil(len(median_list)/2) )
         q = Partition(lst, p, r, median_of_median)
-        # k = q - p + 1
-        k = q - p
+        k = q - p + 1
 
         if i < k:
             return Select(lst, p, q - 1, i)
@@ -89,12 +85,12 @@ def deterministic_select(a, n, k):
         else:
             return Select(lst, q + 1, r, i - k)
 
-    return Select(a, 0, n, k)
+    return Select(a.copy(), 0, n, k)
 
 #check whether the "k"th smallest element in array "a" with "n" elements is the "ans"
 def checker(a, n, k, ans):
-    return True
-
-
-
-
+    lst = a.copy()
+    lst.sort()
+    if lst[k-1] == ans:
+        return True
+    return False
