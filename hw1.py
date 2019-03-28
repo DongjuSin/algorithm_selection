@@ -10,10 +10,7 @@ def randomized_select(a, n, k):
             if A[j] <= x:
                 i = i + 1
                 A[i], A[j] =  A[j], A[i]
-        try:
-            A[i + 1], A[r] = A[r], A[i + 1]
-        except IndexError:
-            A[i + 1], A[r] = A[r], A[i + 1]
+        A[i + 1], A[r] = A[r], A[i + 1]
         return i + 1
 
     def RandomPartition(A, p, r):
@@ -33,11 +30,10 @@ def randomized_select(a, n, k):
         else:
             return RandomSelect(A, q + 1, r, i - k)
 
-    # return RandomSelect(a.copy(), 0, n, k)
-    return RandomSelect(a.copy(), 0, (n-1), k) # (k-1)
+    return RandomSelect(a.copy(), 0, (n-1), k)
 
 #find the "k"th smallest element in array "a" with "n" elements by using the worst-case linear-time algorithm in CLRS
-def deterministic_select(a, n, k):
+def  deterministic_select(a, n, k):
 
     divide = lambda A, s: [ A[i*s : (i+1)*s]   for i in range(math.ceil(len(A)/s)) ]
 
@@ -60,36 +56,53 @@ def deterministic_select(a, n, k):
 
     def Partition(A, p, r, x):
         i = 0
-        for j in range(0, r):
+        for j in range(p, r):
             if A[j] == x: break
             i = i + 1
-        A[i], A[r-1] = A[r-1], A[i]
+        A[i], A[r] = A[r], A[i]
 
         i = p - 1
         for j in range(p, r):
             if A[j] <= x:
                 i = i + 1
                 A[i], A[j] = A[j], A[i]
-        A[i + 1], A[r-1] = A[r-1], A[i + 1]
+        A[i + 1], A[r] = A[r], A[i + 1]
         return i + 1
 
     def Select(lst, p, r, i, group_size = 5):
 
-        group_list = divide(lst, group_size)
-        median_list = [ findMedian(group) for group in group_list ]
+        n = len(lst)
 
-        median_of_median = median_list[0] if len(median_list) == 1 else Select(median_list, 0, len(median_list), math.ceil(len(median_list)/2) )
+        # step 1
+        if n <= group_size:
+            newlst = InsertionSort(lst)
+            return newlst[i-1] # <- 배열 start's at 0 index
+
+        # step 2
+        group_list = divide(lst, group_size)
+
+        # step 3
+        median_list = [findMedian(group) for group in group_list]
+
+        # step 4
+        next_i = math.ceil(len(median_list)/2)  # middle guy
+        median_of_median = Select(median_list, 0, len(median_list) - 1, next_i)
+
+        # step 5
         q = Partition(lst, p, r, median_of_median)
         k = q - p + 1
 
         if i < k:
-            return Select(lst, p, q - 1, i)
+            return Select(lst[p:q], p, len(lst[p:q]) - 1, i)
         elif i == k:
             return lst[q]
         else:
-            return Select(lst, q + 1, r, i - k)
+            return Select(lst[q + 1:(r + 1)], 0, len(lst[q + 1:(r + 1)]) - 1 , i - k)
+        # return Select(lst[q + 1:(r + 1)], q, len(lst[q + 1:(r + 1)]) - 1, i - k)
+        # return Select(lst[q + 1:(r + 1)], q + 1, len(lst[q + 1:(r + 1)]) - 1, i - k)
 
-    return Select(a.copy(), 0, n, k)
+
+    return Select(a.copy(), 0, (n-1), k)
 
 #check whether the "k"th smallest element in array "a" with "n" elements is the "ans"
 def checker(a, n, k, ans):
