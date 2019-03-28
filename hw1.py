@@ -6,17 +6,19 @@ def randomized_select(a, n, k):
     def Partition(A, p, r):
         x = A[r]
         i = p - 1
-        for j in range(p, r):  # r-1
+        for j in range(p, r):
             if A[j] <= x:
                 i = i + 1
-                a[i], a[j] =  a[j], a[i]
-        a[i + 1], a[r] = a[r], a[i + 1]
+                A[i], A[j] =  A[j], A[i]
+        try:
+            A[i + 1], A[r] = A[r], A[i + 1]
+        except IndexError:
+            A[i + 1], A[r] = A[r], A[i + 1]
         return i + 1
 
     def RandomPartition(A, p, r):
-        # i = random.randrange(p, r)
         i = random.randint(p, r)
-        a[i], a[r] = a[r], a[i]
+        A[i], A[r] = A[r], A[i]
         return Partition(A, p, r)
 
     def RandomSelect(A, p, r, i):
@@ -31,7 +33,8 @@ def randomized_select(a, n, k):
         else:
             return RandomSelect(A, q + 1, r, i - k)
 
-    return RandomSelect(a.copy(), 0, (n-1), k)
+    # return RandomSelect(a.copy(), 0, n, k)
+    return RandomSelect(a.copy(), 0, (n-1), k) # (k-1)
 
 #find the "k"th smallest element in array "a" with "n" elements by using the worst-case linear-time algorithm in CLRS
 def deterministic_select(a, n, k):
@@ -106,12 +109,13 @@ if __name__ == "__main__":
             lines = [line for line in file]
             head = lines.pop(0).split()
             time_complexity_dataset[i] = { "n" : int(head[0]), "k" : int(head[1]), "data" : list(map(lambda x : int(x), lines)) }
+        break
 
     for key in time_complexity_dataset:
         dataset             = time_complexity_dataset[key]
         run_time_random     = 0
         run_time_linear     = 0
-        test_count          = 5
+        test_count          = 10
 
         for i in range(test_count):
             start_time = time.time()
@@ -119,13 +123,16 @@ if __name__ == "__main__":
             run_time_random = run_time_random + (time.time() - start_time)
 
             start_time = time.time()
-            b = deterministic_select(dataset["data"], dataset["n"], dataset["k"])
+            # b = deterministic_select(dataset["data"], dataset["n"], dataset["k"])
+            b = 0
             run_time_linear = run_time_linear + (time.time() - start_time)
 
             print(i, dataset["n"], a, b)
 
         time_complexity_dataset[key]["time_complexity_random"] = (run_time_random/test_count)
         time_complexity_dataset[key]["time_complexity_linear"] = (run_time_linear/test_count)
+
+        break
 
     print("number of iteration:", test_count)
     for key in time_complexity_dataset:
