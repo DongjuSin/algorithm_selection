@@ -122,7 +122,6 @@ if __name__ == "__main__":
             lines = [line for line in file]
             head = lines.pop(0).split()
             time_complexity_dataset[i] = { "n" : int(head[0]), "k" : int(head[1]), "data" : list(map(lambda x : int(x), lines)) }
-        break
 
     for key in time_complexity_dataset:
         dataset             = time_complexity_dataset[key]
@@ -139,7 +138,9 @@ if __name__ == "__main__":
             b = deterministic_select(dataset["data"], dataset["n"], dataset["k"])
             run_time_linear = run_time_linear + (time.time() - start_time)
 
-            print(i, dataset["n"], a, b)
+            status = "correct" if a == b else "incorrect"
+
+            print(i, dataset["n"], a, b, status)
 
         time_complexity_dataset[key]["time_complexity_random"] = (run_time_random/test_count)
         time_complexity_dataset[key]["time_complexity_linear"] = (run_time_linear/test_count)
