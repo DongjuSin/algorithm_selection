@@ -14,7 +14,10 @@ def randomized_select(a, n, k):
         return i + 1
 
     def RandomPartition(A, p, r):
-        i = random.randint(p, r)
+        try:
+            i = random.randint(p, r)
+        except ValueError:
+            i = random.randint(r, p)
         A[i], A[r] = A[r], A[i]
         return Partition(A, p, r)
 
@@ -98,9 +101,6 @@ def  deterministic_select(a, n, k):
             return lst[q]
         else:
             return Select(lst[q + 1:(r + 1)], 0, len(lst[q + 1:(r + 1)]) - 1 , i - k)
-        # return Select(lst[q + 1:(r + 1)], q, len(lst[q + 1:(r + 1)]) - 1, i - k)
-        # return Select(lst[q + 1:(r + 1)], q + 1, len(lst[q + 1:(r + 1)]) - 1, i - k)
-
 
     return Select(a.copy(), 0, (n-1), k)
 
@@ -143,8 +143,6 @@ if __name__ == "__main__":
 
         time_complexity_dataset[key]["time_complexity_random"] = (run_time_random/test_count)
         time_complexity_dataset[key]["time_complexity_linear"] = (run_time_linear/test_count)
-
-        break
 
     print("number of iteration:", test_count)
     for key in time_complexity_dataset:
