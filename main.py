@@ -2,7 +2,7 @@ from hw1 import *
 
 if __name__=="__main__":
 
-    for i in range(10):
+    for i in range(100):
 
         a = list(set([random.randint(1, 1000000) for i in range(1000000)]))
         n = len(a)
@@ -12,14 +12,14 @@ if __name__=="__main__":
 
         ans1 = randomized_select(a, n, k)
         if checker(a, n, k, ans1) == True:
-            print(i, "correct")
+            print(i, "correct", k)
         else:
-            print(i, 'incorrect')
+            print(i, 'incorrect =================================================')
         ans2 = deterministic_select(a, n, k)
         if checker(a, n, k, ans2) == True:
-            print(i,"correct")
+            print(i,"correct", k)
         else:
-            print(i, 'incorrect')
+            print(i, 'incorrect =================================================')
 
     print("All Done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
