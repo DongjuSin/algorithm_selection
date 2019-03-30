@@ -106,9 +106,25 @@ def  deterministic_select(a, n, k):
 
 #check whether the "k"th smallest element in array "a" with "n" elements is the "ans"
 def checker(a, n, k, ans):
+
+    def CountingSort(A):
+        m = max(A) + 1
+        # Create a list K size with initalize value as ZERO
+        B = [0]*m   # list holding the results
+        C = [0]*m   # list holding the counts
+        for j in range(len(A)):     # Couting number of Duplicate values and save to index
+            C[A[j]] = C[A[j]] + 1
+        for i in range(1, len(C)):       # Create cummulative count
+            C[i] = C[i] + C[i-1]
+        for j in range((len(A)-1), -1, -1):
+            B[C[A[j]]] = A[j]
+            C[A[j]] = C[A[j]] - 1
+        B.pop(0)
+        return B
+
     lst = a.copy()
-    lst.sort()
-    if lst[k-1] == ans:
+    sorted_lst = CountingSort(lst)
+    if sorted_lst[k-1] == ans:
         return True
     return False
 
