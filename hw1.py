@@ -108,15 +108,25 @@ def  deterministic_select(a, n, k):
 def checker(a, n, k, ans):
 
     def CountingSort(A):
-        m = max(A) + 1
-        # Create a list K size with initalize value as ZERO
-        B = [0]*m   # list holding the results
-        C = [0]*m   # list holding the counts
-        for j in range(len(A)):     # Couting number of Duplicate values and save to index
-            C[A[j]] = C[A[j]] + 1
-        for i in range(1, len(C)):       # Create cummulative count
-            C[i] = C[i] + C[i-1]
-        for j in range((len(A)-1), -1, -1):
+
+        # holds result (sorted list)
+        B = [0] * (len(A) + 1)
+
+        # list holding the counts
+        C = { };
+
+        # Assumse only one instance of each value exsist, as per assignment defined
+        for i in A:
+            C[i] = 1
+
+        # Create cummulative count
+        cummulative_counter = 1
+        for i in range(1, (max(A) + 1) ):
+            if i in C:
+                C[i] = cummulative_counter
+                cummulative_counter = cummulative_counter + 1
+
+        for j in range((len(A) - 1), -1, -1):
             B[C[A[j]]] = A[j]
             C[A[j]] = C[A[j]] - 1
         B.pop(0)
