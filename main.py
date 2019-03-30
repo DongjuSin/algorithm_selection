@@ -2,9 +2,10 @@ from hw1 import *
 
 if __name__=="__main__":
 
-    for i in range(100):
+    for i in range(3000):
 
-        a = list(set([random.randint(1, 1000000) for i in range(1000000)]))
+        # a = list(set([random.randint(1, 1000000000) for i in range(2000000)]))
+        a = list(set([random.randint(1, 200) for i in range(100)]))
         n = len(a)
 
         k = random.randint(1, n - 1)
