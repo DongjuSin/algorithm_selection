@@ -107,31 +107,6 @@ def  deterministic_select(a, n, k):
 #check whether the "k"th smallest element in array "a" with "n" elements is the "ans"
 def checker(a, n, k, ans):
 
-    def CountingSort(A, n):
-
-        # holds result (sorted list)
-        B = [0] * (n + 1)
-
-        # list holding the counts
-        C = { };
-
-        # Assumse only one instance of each value exsist, as per assignment defined
-        for i in A:
-            C[i] = 1
-
-        # Create cummulative count
-        cummulative_counter = 1
-        for i in range(1, (max(A) + 1) ):
-            if i in C:
-                C[i] = cummulative_counter
-                cummulative_counter = cummulative_counter + 1
-
-        for j in range((n - 1), -1, -1):
-            B[C[A[j]]] = A[j]
-            C[A[j]] = C[A[j]] - 1
-        B.pop(0)
-        return B
-
     def RadixSort(A, n):
         largest = max(A)
         digitPlace = 1
@@ -161,19 +136,10 @@ def checker(a, n, k, ans):
             digitPlace = digitPlace * 10
         return A
 
-    lst1 = a.copy()
-    lst2 = a.copy()
-
-    start = time.time()
-    sorted_lst1 = CountingSort(lst1, n)
-    print(time.time() - start)
-
-    start = time.time()
-    sorted_lst2 = RadixSort(lst2, n)
-    print(time.time() - start)
-
-    # if sorted_lst[k-1] == ans:
-    #     return True
+    lst = a.copy()
+    sorted_lst = RadixSort(lst, n)
+    if sorted_lst[k-1] == ans:
+        return True
     return False
 
 
