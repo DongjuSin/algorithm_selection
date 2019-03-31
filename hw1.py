@@ -132,10 +132,48 @@ def checker(a, n, k, ans):
         B.pop(0)
         return B
 
-    lst = a.copy()
-    sorted_lst = CountingSort(lst, n)
-    if sorted_lst[k-1] == ans:
-        return True
+    def RadixSort(A, n):
+        largest = max(A)
+        digitPlace = 1
+
+        a = len(str(largest)) + 1
+
+        while largest/digitPlace > 0 and len(str(digitPlace)) <= a:
+
+            B = [0] * n
+            C = [0] * 10
+
+            for j in range(0, n):
+                index = int( (A[j]/digitPlace)%10 )
+                C[index] = C[index] + 1
+
+            for i in range(1, 10):
+                C[i] = C[i] + C[i-1]
+
+            for j in range( n-1, -1, -1 ):
+                index = int((A[j] / digitPlace) % 10)
+                B[ C[ index ] - 1 ] = A[j]
+                C[index] = C[index] - 1
+
+            for i in range(0, n):
+                A[i] = B[i]
+
+            digitPlace = digitPlace * 10
+        return A
+
+    lst1 = a.copy()
+    lst2 = a.copy()
+
+    start = time.time()
+    sorted_lst1 = CountingSort(lst1, n)
+    print(time.time() - start)
+
+    start = time.time()
+    sorted_lst2 = RadixSort(lst2, n)
+    print(time.time() - start)
+
+    # if sorted_lst[k-1] == ans:
+    #     return True
     return False
 
 
