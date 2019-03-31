@@ -107,10 +107,10 @@ def  deterministic_select(a, n, k):
 #check whether the "k"th smallest element in array "a" with "n" elements is the "ans"
 def checker(a, n, k, ans):
 
-    def CountingSort(A):
+    def CountingSort(A, n):
 
         # holds result (sorted list)
-        B = [0] * (len(A) + 1)
+        B = [0] * (n + 1)
 
         # list holding the counts
         C = { };
@@ -126,14 +126,14 @@ def checker(a, n, k, ans):
                 C[i] = cummulative_counter
                 cummulative_counter = cummulative_counter + 1
 
-        for j in range((len(A) - 1), -1, -1):
+        for j in range((n - 1), -1, -1):
             B[C[A[j]]] = A[j]
             C[A[j]] = C[A[j]] - 1
         B.pop(0)
         return B
 
     lst = a.copy()
-    sorted_lst = CountingSort(lst)
+    sorted_lst = CountingSort(lst, n)
     if sorted_lst[k-1] == ans:
         return True
     return False
@@ -153,27 +153,36 @@ if __name__ == "__main__":
         dataset             = time_complexity_dataset[key]
         run_time_random     = 0
         run_time_linear     = 0
-        test_count          = 10
+        test_count          = 5
+
+        time_complexity_dataset[key]["time_complexity_random"] = []
+        time_complexity_dataset[key]["time_complexity_linear"] = []
 
         for i in range(test_count):
+
             start_time = time.time()
             a = randomized_select(dataset["data"], dataset["n"], dataset["k"])
-            run_time_random = run_time_random + (time.time() - start_time)
+            time_complexity_dataset[key]["time_complexity_random"].append(time.time() - start_time)
 
             start_time = time.time()
             b = deterministic_select(dataset["data"], dataset["n"], dataset["k"])
-            run_time_linear = run_time_linear + (time.time() - start_time)
+            time_complexity_dataset[key]["time_complexity_linear"].append(time.time() - start_time)
 
             status = "correct" if a == b else "incorrect"
-
             print(i, dataset["n"], a, b, status)
-
-        time_complexity_dataset[key]["time_complexity_random"] = (run_time_random/test_count)
-        time_complexity_dataset[key]["time_complexity_linear"] = (run_time_linear/test_count)
 
     print("number of iteration:", test_count)
     for key in time_complexity_dataset:
         item = time_complexity_dataset[key]
-        print(item["n"], item["k"], item["time_complexity_random"], item["time_complexity_linear"])
+        print(item["n"], item["k"])
+
+        time_complexity_random = 0
+        time_complexity_linear = 0
+        for i in range(5):
+            time_complexity_random = time_complexity_random + item["time_complexity_random"][i]
+            time_complexity_linear = time_complexity_linear + item["time_complexity_linear"][i]
+            print(item["time_complexity_random"][i], item["time_complexity_linear"][i])
+        print("============={0} | {1}".format(time_complexity_random/5, time_complexity_linear/5))
+
 
 
