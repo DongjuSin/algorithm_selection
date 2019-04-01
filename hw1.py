@@ -160,6 +160,7 @@ def checker(a, n, k, ans):
                 index = int( (A[j]/digitPlace)%10 ) # use module to find  current digit place
                 C[index] = C[index] + 1
 
+            # Count the cummulative values
             for i in range(1, 10):
                 C[i] = C[i] + C[i-1]
 
@@ -171,7 +172,9 @@ def checker(a, n, k, ans):
             for i in range(0, n):
                 A[i] = B[i]
 
+            # increase digitplace by one 0
             digitPlace = digitPlace * 10
+
         return A
 
     lst = a.copy()
@@ -182,6 +185,10 @@ def checker(a, n, k, ans):
 
 
 if __name__ == "__main__":
+
+    '''
+        This code is for checking the time complexity using TA's test data
+    '''
 
     time_complexity_dataset = {};
 
