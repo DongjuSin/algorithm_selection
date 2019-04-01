@@ -3,28 +3,46 @@ import random, math, time
 #find the "k"th smallest element in array "a" with "n" elements by using Randomized-select in CLRS
 def randomized_select(a, n, k):
 
+    # CLRS textbook partition pseudocode
+    # page: 147
     def Partition(A, p, r):
-        x = A[r]
-        i = p - 1
+        x = A[r]    # select pivot as the last element in list
+        i = p - 1   # get starting position
         for j in range(p, r):
-            if A[j] <= x:
+            if A[j] <= x:    # check current value is smaller than pivot
                 i = i + 1
-                A[i], A[j] =  A[j], A[i]
-        A[i + 1], A[r] = A[r], A[i + 1]
+                A[i], A[j] =  A[j], A[i]    # switch location
+        A[i + 1], A[r] = A[r], A[i + 1]     # move pivot to correct location
         return i + 1
 
+    # CLRS textbook randomized partition pseudocode
+    # page: 154
     def RandomPartition(A, p, r):
+        # select a random position as pivot
         try:
             i = random.randint(p, r)
         except ValueError:
             i = random.randint(r, p)
-        A[i], A[r] = A[r], A[i]
+        A[i], A[r] = A[r], A[i]  # send pivot to last location in array
+
+        # sort by pivot
         return Partition(A, p, r)
 
+    # CLRS textbook randomized select pseudocode
+    # page: 186
     def RandomSelect(A, p, r, i):
+
+        # if only one in the array return it
         if p == r:
             return A[r]
+
+        # get a random index
         q = RandomPartition(A, p, r)
+
+        # check if we have found item
+        # i = k what we have found is equal to search then return
+        # i < k what we have found is larger then search between p to q
+        # i > k what we have found is larger then search between q to r
         k = q - p + 1
         if i == k:
             return A[q]
@@ -38,8 +56,11 @@ def randomized_select(a, n, k):
 #find the "k"th smallest element in array "a" with "n" elements by using the worst-case linear-time algorithm in CLRS
 def  deterministic_select(a, n, k):
 
+    # sepcial array grouping function
     divide = lambda A, s: [ A[i*s : (i+1)*s]   for i in range(math.ceil(len(A)/s)) ]
 
+    # CLRS textbook insertion sort pseudocode
+    # page: 17
     def InsertionSort(A):
         for j in range(1, len(A)):
             key = A[j]
@@ -50,48 +71,63 @@ def  deterministic_select(a, n, k):
             A[i + 1] = key
         return A
 
+    # find the middle element in the given lst
     def findMedian(lst):
+
+        # sort list using insertion sort
         sorted_list = InsertionSort(lst)
+
+        # find the middle element by dividing list by 2
         middle = math.floor(len(sorted_list) / 2)
+
+        # if list is even, get the lower element
         if len(lst) % 2 == 0:
             middle = middle - 1
+
+        # return the middle element of the sorted list
         return sorted_list[middle]
 
+    # A customized version of CLRS textbook partition pseudocode
+    # page: 147
+    # instead of select last element, send my current element to the last location
     def Partition(A, p, r, x):
         i = 0
+        # find index of my searching element
         for j in range(p, r):
             if A[j] == x: break
             i = i + 1
-        A[i], A[r] = A[r], A[i]
+        A[i], A[r] = A[r], A[i]    # send my current element to the back
 
-        i = p - 1
+        i = p - 1    # get starting position
         for j in range(p, r):
-            if A[j] <= x:
+            if A[j] <= x: # check current value is smaller than pivot
                 i = i + 1
-                A[i], A[j] = A[j], A[i]
-        A[i + 1], A[r] = A[r], A[i + 1]
+                A[i], A[j] = A[j], A[i] # switch location
+        A[i + 1], A[r] = A[r], A[i + 1] # move pivot to correct location
         return i + 1
 
+    # CLRS textbook SELECT pseudocode
+    # page: 189-190
     def Select(lst, p, r, i, group_size = 5):
 
         n = len(lst)
 
-        # step 1
+        # step 1 : Divide the n elements of the input array into floor(n/5) groups of 5 elements each and at most one group made ...
         if n <= group_size:
             newlst = InsertionSort(lst)
-            return newlst[i-1] # <- 배열 start's at 0 index
+            return newlst[i-1] # <- array start's at 0 index
 
-        # step 2
+        # step 2 : Find the median of each of the ceil(4/5) group sby first insertion sorting the elements of each group (of ...
         group_list = divide(lst, group_size)
 
-        # step 3
+        # step 3 : Use SELECT recursively to find the median x of the ceil(n/5) medians found in step 2.
         median_list = [findMedian(group) for group in group_list]
 
-        # step 4
+        # step 4 : Partition the input array around the median-of-medians x using the modified version of PARTITION. Left k be one more...
         next_i = math.ceil(len(median_list)/2)  # middle guy
         median_of_median = Select(median_list, 0, len(median_list) - 1, next_i)
 
-        # step 5
+        # step 5 : i  = k return x, Otherwise, use SELECT recursively to find the ith smallest on the low side if i < k, or the (i-k) th....
         q = Partition(lst, p, r, median_of_median)
         k = q - p + 1
 
@@ -107,6 +143,8 @@ def  deterministic_select(a, n, k):
 #check whether the "k"th smallest element in array "a" with "n" elements is the "ans"
 def checker(a, n, k, ans):
 
+    # CLRS textbook counting sort pseudocode
+    # page: 168
     def RadixSort(A, n):
         largest = max(A)
         digitPlace = 1
@@ -119,14 +157,14 @@ def checker(a, n, k, ans):
             C = [0] * 10
 
             for j in range(0, n):
-                index = int( (A[j]/digitPlace)%10 )
+                index = int( (A[j]/digitPlace)%10 ) # use module to find  current digit place
                 C[index] = C[index] + 1
 
             for i in range(1, 10):
                 C[i] = C[i] + C[i-1]
 
             for j in range( n-1, -1, -1 ):
-                index = int((A[j] / digitPlace) % 10)
+                index = int((A[j] / digitPlace) % 10) # use module to find  current digit place
                 B[ C[ index ] - 1 ] = A[j]
                 C[index] = C[index] - 1
 
