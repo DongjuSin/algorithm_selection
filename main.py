@@ -1,5 +1,6 @@
 from hw1 import *
 import pickle
+import datetime
 
 if __name__=="__main__":
 
@@ -11,7 +12,8 @@ if __name__=="__main__":
 
     for i in range(3000):
 
-        a = list(set([random.randint(1, 1000000000) for i in range(2000000)]))
+        lst_length = random.randint(10, 2000000)
+        a = list(set([random.randint(1, 1000000000) for i in range(lst_length)]))
         # a = list(set([random.randint(1, 200) for i in range(100)]))
         n = len(a)
 
@@ -21,6 +23,8 @@ if __name__=="__main__":
         ans1 = randomized_select(a, n, k)
         if checker(a, n, k, ans1) == True:
             # print(i, "correct", k)
+            now = datetime.datetime.now()
+            print(str(now))
             pass
         else:
             with open("ff.bin", 'wb') as pickle_file:
@@ -30,6 +34,8 @@ if __name__=="__main__":
         ans2 = deterministic_select(a, n, k)
         if checker(a, n, k, ans2) == True:
             # print(i,"correct", k)
+            now = datetime.datetime.now()
+            print(str(now))
             pass
         else:
             with open("ff.bin", 'wb') as pickle_file:
