@@ -15,7 +15,7 @@ if __name__=="__main__":
         # a = list(set([random.randint(1, 200) for i in range(100)]))
         n = len(a)
 
-        k = random.randint(1, n - 1)
+        k = random.randint(0, n - 1)
         random.shuffle(a)
 
         ans1 = randomized_select(a, n, k)
