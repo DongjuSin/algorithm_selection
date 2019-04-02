@@ -51,7 +51,7 @@ def randomized_select(a, n, k):
         else:
             return RandomSelect(A, q + 1, r, i - k)
 
-    return RandomSelect(a.copy(), 0, (n-1), k)
+    return RandomSelect(a.copy(), 0, (n-1), k + 1)
 
 #find the "k"th smallest element in array "a" with "n" elements by using the worst-case linear-time algorithm in CLRS
 def  deterministic_select(a, n, k):
@@ -138,7 +138,7 @@ def  deterministic_select(a, n, k):
         else:
             return Select(lst[q + 1:(r + 1)], 0, len(lst[q + 1:(r + 1)]) - 1 , i - k)
 
-    return Select(a.copy(), 0, (n-1), k)
+    return Select(a.copy(), 0, (n-1), (k + 1))
 
 #check whether the "k"th smallest element in array "a" with "n" elements is the "ans"
 def checker(a, n, k, ans):
@@ -179,7 +179,7 @@ def checker(a, n, k, ans):
 
     lst = a.copy()
     sorted_lst = RadixSort(lst, n)
-    if sorted_lst[k-1] == ans:
+    if sorted_lst[k] == ans:
         return True
     return False
 
