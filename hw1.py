@@ -187,6 +187,30 @@ def checker(a, n, k, ans):
 if __name__ == "__main__":
 
     '''
+        This is code for checkingmy custom data time set
+    '''
+    for i in range(1, 3):
+        with open("custom_{0}.txt".format(i)) as file:
+            lines = [line for line in file]
+            head = lines.pop(0).split()
+
+            n = int(head[0])
+            k = int(head[1])
+            a = list(map(lambda x: int(x), lines))
+
+            start = time.time()
+            ans1 = randomized_select(a, n, k)
+            end = time.time() - start
+            c = checker(a, n, k, ans1)
+            print("n: {0}, k: {1}, randomzed_select_result: {2}, checker result:{3}, run time: {4}".format(n, k, ans1, c, end))
+
+            start = time.time()
+            ans2 = deterministic_select(a, n, k)
+            end = time.time() - start
+            c = checker(a, n, k, ans2)
+            print("n: {0}, k: {1}, deterministic_select_result: {2}, checker result:{3}, run time: {4}".format(n, k, ans2, c, end))
+
+    '''
         This code is for checking the time complexity using TA's test data
     '''
 
