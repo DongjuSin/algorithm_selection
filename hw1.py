@@ -117,26 +117,29 @@ def  deterministic_select(a, n, k):
             newlst = InsertionSort(lst)
             return newlst[i-1] # <- array start's at 0 index
 
-        # step 2 : Find the median of each of the ceil(4/5) group sby first insertion sorting the elements of each group (of ...
         group_list = divide(lst, group_size)
-
-        # step 3 : Use SELECT recursively to find the median x of the ceil(n/5) medians found in step 2.
+        
+        # step 2 : Find the median of each of the ceil(n/5) groups by first insertion sorting the elements of each group (of ...
         median_list = [findMedian(group) for group in group_list]
-
-        # step 4 : Partition the input array around the median-of-medians x using the modified version of PARTITION. Left k be one more...
+        
+        # step 3 : Use SELECT recursively to find the median x of the ceil(n/5) medians found in step 2.
         next_i = math.ceil(len(median_list)/2)  # middle guy
         median_of_median = Select(median_list, 0, len(median_list) - 1, next_i)
-
-        # step 5 : i  = k return x, Otherwise, use SELECT recursively to find the ith smallest on the low side if i < k, or the (i-k) th....
+        
+        # step 4 : Partition the input array around the median-of-medians x using the modified version of PARTITION. Left k be one more...
         q = Partition(lst, p, r, median_of_median)
         k = q - p + 1
+        
+        # step 5 : i  = k return x, Otherwise, use SELECT recursively to find the ith smallest on the low side if i < k, or the (i-k) th....
 
         if i < k:
-            return Select(lst[p:q], p, len(lst[p:q]) - 1, i)
+            # return Select(lst[p:q], p, len(lst[p:q]) - 1, i) ## ?
+            return Select(lst[p:q], p, p + len(lst[p:q]) - 1, i) 
         elif i == k:
             return lst[q]
         else:
-            return Select(lst[q + 1:(r + 1)], 0, len(lst[q + 1:(r + 1)]) - 1 , i - k)
+            # return Select(lst[q + 1:(r + 1)], 0, len(lst[q + 1:(r + 1)]) - 1 , i - k)
+            return Select(lst[q + 1:(r + 1)], q+1, len(lst[q + 1:(r + 1)]) - 1 , i - k)
 
     return Select(a.copy(), 0, (n-1), (k + 1))
 
